@@ -1,6 +1,3 @@
-// Copyright 2025 Dasky (@daskygit)
-// SPDX-License-Identifier: GPL-2.0-or-later
-
 #include "quantum.h"
 
 static uint16_t current_keycode = 0xFF;

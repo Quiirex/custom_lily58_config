@@ -1,3 +1,3 @@
 ifeq ($(strip $(OLED_ENABLE)), yes)
-	SRC += keyboards/mechboards/common/display_oled.c
+	SRC += keyboards/quiirex/common/display_oled.c
 endif
