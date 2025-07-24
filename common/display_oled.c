@@ -2,6 +2,36 @@
 
 static uint16_t current_keycode = 0xFF;
 
+#define WPM_SAMPLE_SIZE 10
+static uint8_t wpm_samples[WPM_SAMPLE_SIZE] = {0};
+static uint8_t wpm_sample_index = 0;
+static uint32_t last_wpm_sample_time = 0;
+
+
+static void update_wpm_average(void) {
+    uint32_t current_time = timer_read32();
+    
+    if (current_time - last_wpm_sample_time > 5000) {
+        wpm_samples[wpm_sample_index] = get_current_wpm();
+        wpm_sample_index = (wpm_sample_index + 1) % WPM_SAMPLE_SIZE;
+        last_wpm_sample_time = current_time;
+    }
+}
+
+static uint8_t get_average_wpm(void) {
+    uint16_t total = 0;
+    uint8_t count = 0;
+    
+    for (uint8_t i = 0; i < WPM_SAMPLE_SIZE; i++) {
+        if (wpm_samples[i] > 0) {
+            total += wpm_samples[i];
+            count++;
+        }
+    }
+    
+    return count > 0 ? total / count : 0;
+}
+
 static const char *depad_str(const char *depad_str, char depad_char) {
     while (*depad_str == depad_char)
         ++depad_str;
@@ -57,6 +87,13 @@ void render_rgb_info(void) {
     oled_set_cursor(0, 9);
     oled_write("M:", false);
     oled_write_ln(depad_str(get_u16_str(last_mode, ' '), ' '), false);
+}
+
+void render_typing_stats(void) {
+    oled_set_cursor(0, 0);
+    oled_write("AvWPM", false);
+    oled_set_cursor(0, 2);
+    oled_write_ln(depad_str(get_u8_str(get_average_wpm(), ' '), ' '), false);
 }
 
 oled_rotation_t oled_init_kb(oled_rotation_t rotation) {
@@ -442,6 +479,8 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
 
 uint16_t loop_rate = 0;
 void     housekeeping_task_kb(void) {
+    update_wpm_average();
+    
     if (is_keyboard_master()) {
         static uint32_t     loop_count = 0;
         static fast_timer_t loop_time  = 0;
@@ -464,19 +503,7 @@ void     housekeeping_task_kb(void) {
 void oled_reinit_slave(void) {
     oled_init(OLED_ROTATION_270);
     oled_clear();
-    oled_set_cursor(0, 0);
-    oled_write_ln("WPM", false);
-    render_spacer(3);
-    oled_advance_page(false);
-    oled_write_ln(depad_str(get_u16_str(get_current_wpm(), ' '), ' '), false);
-
-    oled_set_cursor(0, 4);
-    oled_write_ln("RGB", false);
-    render_spacer(3);
-    render_rgb_info();
-
-    oled_set_cursor(0, 13);
-    render_small_mb_logo();
+    render_typing_stats();
 }
 
 bool oled_task_kb(void) {
@@ -505,14 +532,13 @@ bool oled_task_kb(void) {
                 oled_reinit_slave();
             }
         } else {
-            static uint16_t last_wpm = 0;
-            if (rgb_matrix_get_hue() != last_hue || rgb_matrix_get_sat() != last_sat || rgb_matrix_get_val() != last_val || rgb_matrix_get_mode() != last_mode) {
-                render_rgb_info();
-            }
-            if (last_wpm != get_current_wpm()) {
-                last_wpm = get_current_wpm();
-                oled_set_cursor(0, 2);
-                oled_write_ln(depad_str(get_u16_str(last_wpm, ' '), ' '), false);
+            static uint8_t last_avg_wpm = 0;
+            
+            uint8_t current_avg_wpm = get_average_wpm();
+            
+            if (last_avg_wpm != current_avg_wpm) {
+                render_typing_stats();
+                last_avg_wpm = current_avg_wpm;
             }
         }
     }
