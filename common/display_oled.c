@@ -192,6 +192,145 @@ const char *keycode_string(uint16_t keycode) {
         case QK_UNICODEMAP ... QK_UNICODEMAP_PAIR_MAX:
             keycode_str = "Uni\0";
             break;
+        // Modifier keys
+        case KC_LSFT:
+            keycode_str = "LSft\0";
+            break;
+        case KC_RSFT:
+            keycode_str = "RSft\0";
+            break;
+        case KC_LCTL:
+            keycode_str = "LCtl\0";
+            break;
+        case KC_RCTL:
+            keycode_str = "RCtl\0";
+            break;
+        case KC_LALT:
+            keycode_str = "LAlt\0";
+            break;
+        case KC_RALT:
+            keycode_str = "RAlt\0";
+            break;
+        case KC_LGUI:
+            keycode_str = "Super\0";
+            break;
+        case KC_RGUI:
+            keycode_str = "Super\0";
+            break;
+        // Navigation keys
+        case KC_LEFT:
+            keycode_str = "Left\0";
+            break;
+        case KC_DOWN:
+            keycode_str = "Down\0";
+            break;
+        case KC_UP:
+            keycode_str = "Up\0";
+            break;
+        case KC_RGHT:
+            keycode_str = "Rght\0";
+            break;
+        case KC_HOME:
+            keycode_str = "Home\0";
+            break;
+        case KC_END:
+            keycode_str = "End\0";
+            break;
+        case KC_PGUP:
+            keycode_str = "PgUp\0";
+            break;
+        case KC_PGDN:
+            keycode_str = "PgDn\0";
+            break;
+        case KC_INS:
+            keycode_str = "Ins\0";
+            break;
+        // Function keys
+        case KC_F1:
+            keycode_str = "F1\0";
+            break;
+        case KC_F2:
+            keycode_str = "F2\0";
+            break;
+        case KC_F3:
+            keycode_str = "F3\0";
+            break;
+        case KC_F4:
+            keycode_str = "F4\0";
+            break;
+        case KC_F5:
+            keycode_str = "F5\0";
+            break;
+        case KC_F6:
+            keycode_str = "F6\0";
+            break;
+        case KC_F7:
+            keycode_str = "F7\0";
+            break;
+        case KC_F8:
+            keycode_str = "F8\0";
+            break;
+        case KC_F9:
+            keycode_str = "F9\0";
+            break;
+        case KC_F10:
+            keycode_str = "F10\0";
+            break;
+        case KC_F11:
+            keycode_str = "F11\0";
+            break;
+        case KC_F12:
+            keycode_str = "F12\0";
+            break;
+        // Keypad
+        case KC_P1:
+            keycode_str = "P1\0";
+            break;
+        case KC_P2:
+            keycode_str = "P2\0";
+            break;
+        case KC_P3:
+            keycode_str = "P3\0";
+            break;
+        case KC_P4:
+            keycode_str = "P4\0";
+            break;
+        case KC_P5:
+            keycode_str = "P5\0";
+            break;
+        case KC_P6:
+            keycode_str = "P6\0";
+            break;
+        case KC_P7:
+            keycode_str = "P7\0";
+            break;
+        case KC_P8:
+            keycode_str = "P8\0";
+            break;
+        case KC_P9:
+            keycode_str = "P9\0";
+            break;
+        case KC_P0:
+            keycode_str = "P0\0";
+            break;
+        case KC_PDOT:
+            keycode_str = "P.\0";
+            break;
+        case KC_PENT:
+            keycode_str = "PEnt\0";
+            break;
+        case KC_PPLS:
+            keycode_str = "P+\0";
+            break;
+        case KC_PMNS:
+            keycode_str = "P-\0";
+            break;
+        case KC_PAST:
+            keycode_str = "P*\0";
+            break;
+        case KC_PSLS:
+            keycode_str = "P/\0";
+            break;
         default:
             keycode_str = "Undef\0";
             break;
