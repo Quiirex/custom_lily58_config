@@ -1,5 +1,7 @@
 #include "quantum.h"
 
+void render_logo(void);
+
 static uint16_t current_keycode = 0xFF;
 
 static const char *depad_str(const char *depad_str, char depad_char) {
@@ -19,51 +21,11 @@ static void render_spacer(uint8_t char_length) {
     }
 }
 
-__attribute__((weak)) void render_logo(void) {
-    static const char PROGMEM mb_logo[] = {
-        252, 254, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 31, 31, 31, 31,  31,  255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 3,   3,   3,   3,   3,   3,   3,   3,   3,   3,   3,   3,   3,   3,   3,   3,   3,   3,   3,   3,   3,   3,   3,   3,   3,   3,   3,   3,   3,   3,   3,   3,   227, 227, 227, 3,   227, 227, 227, 3,   227, 227, 227, 3,   3,   3,   3,   3,   3,   3,   3,   3,   3,   3,   3,   3,   3,   3,   3,   3,   3,   3,   3,   3,   3,   3,   7,   254, 252, 255, 255, 255, 255, 255, 7,   7,   7,   7,   7,   255, 7,   7,   7,   7,   7,   255, 7,   7,   7,   7,   7,   255, 7,   7,   7,   7,   7,   255, 7,   7,   7,   7,   7,   255, 255, 255, 4,   4,   4,   4,   4,  255,
-        7,   7,   7,   7,   7,   255, 7,   7,   7,   7,   7,   255, 255, 255, 255, 255, 0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,  0,  0,  0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   224, 224, 224, 0,   238, 238, 238, 0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   255, 255, 255, 255, 255, 255, 255, 65,  65,  65,  65,  65,  255, 255, 255, 255, 255, 255, 255, 65,  65,  65,  65,  65,  255, 255, 255, 255, 255, 255, 255, 65,  65,  65,  65,  65,  255, 255, 255, 65,  65,  65,  65,  65,  255, 127, 127, 127, 127, 127, 255, 65,  65,  65,  65,  65,  255, 255, 255, 255, 255, 0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,  0,
-        0,   0,   0,   0,   0,   0,   0,   0,   0,   14,  14,  14,  0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,  0,  0,  255, 255, 63,  127, 255, 255, 255, 240, 240, 240, 240, 240, 255, 255, 255, 255, 255, 255, 255, 240, 240, 240, 240, 240, 255, 255, 255, 255, 255, 255, 255, 240, 240, 240, 240, 240, 255, 255, 255, 240, 240, 240, 240, 240, 255, 240, 240, 240, 240, 240, 255, 240, 240, 240, 240, 240, 255, 255, 255, 255, 255, 192, 192, 192, 192, 192, 192, 192, 192, 192, 192, 192, 192, 192, 192, 192, 192, 192, 192, 192, 192, 192, 192, 192, 192, 192, 192, 192, 192, 192, 192, 192, 192, 192, 192, 192, 192, 199, 199, 199, 192, 192, 192, 192, 192, 192, 192, 192, 192, 192, 192, 192, 192, 192, 192, 192, 192, 192, 192, 192, 192, 192, 192, 192, 192, 192, 192, 224, 127, 63,
-    };
-    oled_write_raw_P(mb_logo, sizeof(mb_logo));
-}
-
-void render_small_mb_logo(void) {
-    static const char PROGMEM small_mb_logo[] = {
-        112, 112, 112, 0, 112, 112, 112, 0, 112, 112, 112, 0, 112, 112, 112, 0, 112, 112, 112, 0, 0, 119, 119, 119, 0, 112, 112, 112, 0, 112, 112, 112, 119, 119, 119, 0, 0, 0, 0, 0, 119, 119, 119, 0, 0, 0, 0, 0, 119, 119, 119, 0, 0, 119, 119, 119, 0, 112, 112, 112, 0, 119, 119, 119,
-    };
-    oled_write_raw_P(small_mb_logo, sizeof(small_mb_logo));
-}
-
-static uint8_t last_hue;
-static uint8_t last_sat;
-static uint8_t last_val;
-static uint8_t last_mode;
-
-void render_rgb_info(void) {
-    last_hue  = rgb_matrix_get_hue();
-    last_sat  = rgb_matrix_get_sat();
-    last_val  = rgb_matrix_get_val();
-    last_mode = rgb_matrix_get_mode();
-    oled_set_cursor(0, 6);
-    oled_write("H:", false);
-    oled_write(depad_str(get_u16_str(last_hue, ' '), ' '), false);
-    oled_set_cursor(0, 7);
-    oled_write("S:", false);
-    oled_write_ln(depad_str(get_u16_str(last_sat, ' '), ' '), false);
-    oled_set_cursor(0, 8);
-    oled_write("V:", false);
-    oled_write_ln(depad_str(get_u16_str(last_val, ' '), ' '), false);
-    oled_set_cursor(0, 9);
-    oled_write("M:", false);
-    oled_write_ln(depad_str(get_u16_str(last_mode, ' '), ' '), false);
-}
-
 oled_rotation_t oled_init_kb(oled_rotation_t rotation) {
     if (is_keyboard_master()) {
         return OLED_ROTATION_270;
     }
-    return rotation;
+    return OLED_ROTATION_270; // change back to rotation later
 }
 
 char basic_codes_to_name[57] = {' ', ' ', ' ', ' ', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'R', 'E', 'B', 'T', '_', '-', '=', '[', ']', '\\', '#', ';', '\'', '`', ',', '.', '/'};
@@ -422,8 +384,10 @@ void keyboard_post_init_kb(void) {
         oled_write_ln("Wait", false);
 
         oled_set_cursor(0, 12);
-        oled_write_ln("Rate", false);
-        render_spacer(4);
+        oled_write_ln("WPM", false);
+        render_spacer(3);
+        oled_advance_page(false);
+        oled_write_ln(depad_str(get_u16_str(get_current_wpm(), ' '), ' '), false);
     }
     keyboard_post_init_user();
 }
@@ -440,40 +404,10 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
     return process_record_user(keycode, record);
 };
 
-uint16_t loop_rate = 0;
-void     housekeeping_task_kb(void) {
-    if (is_keyboard_master()) {
-        static uint32_t     loop_count = 0;
-        static fast_timer_t loop_time  = 0;
-        loop_count++;
-        if (timer_elapsed_fast(loop_time) > 1000) {
-            loop_time  = timer_read_fast();
-            loop_rate  = loop_count > UINT16_MAX ? UINT16_MAX : loop_count;
-            loop_count = 0;
-            if (is_oled_on()) {
-                oled_set_cursor(0, 14);
-                oled_write(depad_str(get_u16_str(loop_rate, ' '), ' '), false);
-            }
-        }
-    }
+void housekeeping_task_kb(void) {
     if (is_oled_on() && last_input_activity_elapsed() > OLED_TIMEOUT) {
         oled_off();
     }
-}
-
-void oled_reinit_slave(void) {
-    oled_init(OLED_ROTATION_270);
-    oled_clear();
-    oled_set_cursor(0, 0);
-    oled_write_ln("WPM", false);
-    render_spacer(3);
-    oled_advance_page(false);
-    oled_write_ln(depad_str(get_u16_str(get_current_wpm(), ' '), ' '), false);
-
-    oled_set_cursor(0, 4);
-    oled_write_ln("RGB", false);
-    render_spacer(3);
-    render_rgb_info();
 }
 
 bool oled_task_kb(void) {
@@ -481,8 +415,7 @@ bool oled_task_kb(void) {
         return false;
     }
 
-    static uint16_t last_keycode         = 0xFF;
-    static bool     oled_slave_init_done = false;
+    static uint16_t last_keycode = 0xFF;
 
     if (is_keyboard_master()) {
         if (last_keycode != current_keycode) {
@@ -495,24 +428,14 @@ bool oled_task_kb(void) {
             }
             last_keycode = current_keycode;
         }
-    } else {
-        if (!oled_slave_init_done) {
-            if (timer_elapsed32(0) > 5000) {
-                oled_slave_init_done = true;
-                oled_reinit_slave();
-            }
-        } else {
-            static uint16_t last_wpm = 0;
-            if (rgb_matrix_get_hue() != last_hue || rgb_matrix_get_sat() != last_sat || rgb_matrix_get_val() != last_val || rgb_matrix_get_mode() != last_mode) {
-                render_rgb_info();
-            }
-            if (last_wpm != get_current_wpm()) {
-                last_wpm = get_current_wpm();
-                oled_set_cursor(0, 2);
+        static uint16_t last_wpm = 0;
+        if (last_wpm != get_current_wpm()) {
+            last_wpm = get_current_wpm();
+            if (is_oled_on()) {
+                oled_set_cursor(0, 14);
                 oled_write_ln(depad_str(get_u16_str(last_wpm, ' '), ' '), false);
             }
         }
     }
-
     return false;
 }
